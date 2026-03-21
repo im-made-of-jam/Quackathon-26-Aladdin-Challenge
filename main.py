@@ -5,6 +5,7 @@ from Boxes.TextInputBox import TextInputBox
 from Boxes.ListSelection import ListSelectionBox, ListSelectionItem
 from Boxes.TextRenderBox import TextRenderBox
 from Boxes.ClickableBox import ClickableBoxItem
+from Boxes.ImageContainer import ImageContainer
 
 # set up pygame for rendering
 pygame.init()
@@ -17,10 +18,22 @@ displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
 imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
-textInputBoxes = []
-listBoxes      = []
-renderBoxes    = []
-clickableBoxes = [ClickableBoxItem("Click Me!", 24, 1000, 100, 200, 50)]
+textInputBoxes = [
+    TextInputBox(x=700, y=100, w=300, h=50), # income in the period
+]
+renderBoxes    = [
+    TextRenderBox("Income in that time", x=700, y=40, w=300, h=50)
+]
+clickableBoxes = [
+    ClickableBoxItem("Calculate", 24, 1000, 100, 200, 50)
+]
+imageContainers = [
+    ImageContainer("logo", 0, 0)
+]
+
+listBoxes      = [
+    ListSelectionBox()
+]
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
@@ -35,8 +48,9 @@ def updateWindow():
     # make the background white
     displaySurface.fill((255, 255, 255))
 
-    # add the obsidian logo
-    displaySurface.blit(imageDict["logo"], (0, 0))
+    # add any pictures we need draw
+    for image in imageContainers:
+        displaySurface.blit(imageDict[image.imageName], (image.x, image.y))
 
     # add the exit button
     if exitHovered:
@@ -87,6 +101,10 @@ while 1:
 
                 # and the same for letters
                 if 'a' <= event.text.lower() <= 'z':
+                    for box in textInputBoxes:
+                        box.addIfSelected(event.text)
+
+                if ' ' == event.text:
                     for box in textInputBoxes:
                         box.addIfSelected(event.text)
 
