@@ -16,13 +16,9 @@ displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
 imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
-textInputBoxes = [TextInputBox(24, 100, 1000, 100, 100)]
-listBoxes      = [ListSelectionBox(24, 600, 100)]
-renderBoxes    = [TextRenderBox("renderthis", 24, 1000, 500, 150, 50)]
-
-listBoxes[-1].addItem(ListSelectionItem("option1", 12, 0, 0, 150, 50))
-listBoxes[-1].addItem(ListSelectionItem("option2", 12, 0, 50, 150, 50))
-listBoxes[-1].addItem(ListSelectionItem("option3", 12, 0, 100, 150, 50))
+textInputBoxes = []
+listBoxes      = []
+renderBoxes    = []
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
