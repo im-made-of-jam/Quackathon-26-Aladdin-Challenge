@@ -1,6 +1,6 @@
 import pygame # rendering library
 
-from InitImages import initImages
+from Images.InitImages import initImages
 from Boxes.TextInputBox import TextInputBox
 from Boxes.ListSelection import ListSelectionBox, ListSelectionItem
 from Boxes.TextRenderBox import TextRenderBox
