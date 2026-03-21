@@ -4,6 +4,7 @@ from InitImages import initImages
 from Boxes.TextInputBox import TextInputBox
 from Boxes.ListSelection import ListSelectionBox, ListSelectionItem
 from Boxes.TextRenderBox import TextRenderBox
+from Boxes.ClickableBox import ClickableBoxItem
 
 # set up pygame for rendering
 pygame.init()
@@ -19,6 +20,7 @@ imageDict = initImages()
 textInputBoxes = []
 listBoxes      = []
 renderBoxes    = []
+clickableBoxes = [ClickableBoxItem("Click Me!", 24, 1000, 100, 200, 50)]
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
@@ -55,6 +57,11 @@ def updateWindow():
 
     # these boxes dont have a hover or selection effect so just render them
     for box in renderBoxes:
+        displaySurface.blit(box.render(), (box.x, box.y))
+
+    for box in clickableBoxes:
+        box.updateHovered(mousePos)
+
         displaySurface.blit(box.render(), (box.x, box.y))
 
     # update the screen
@@ -109,6 +116,9 @@ while 1:
                     box.updateSelected()
 
                 for box in listBoxes:
+                    box.updateSelected()
+
+                for box in clickableBoxes:
                     box.updateSelected()
 
             case _:
