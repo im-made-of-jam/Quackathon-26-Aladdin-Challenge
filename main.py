@@ -3,6 +3,7 @@ import pygame # rendering library
 from InitImages import initImages
 from TextInputBox import TextInputBox
 from ListSelection import ListSelectionBox, ListSelectionItem
+from TextRenderBox import TextRenderBox
 
 # set up pygame for rendering
 pygame.init()
@@ -16,9 +17,12 @@ imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
 textInputBoxes = [TextInputBox(24, 100, 1000, 100, 100)]
-listBoxes = [ListSelectionBox(24, 600, 100)]
+listBoxes      = [ListSelectionBox(24, 600, 100)]
+renderBoxes    = [TextRenderBox("renderthis", 24, 1000, 500, 150, 50)]
 
 listBoxes[-1].addItem(ListSelectionItem("option1", 12, 0, 0, 150, 50))
+listBoxes[-1].addItem(ListSelectionItem("option2", 12, 0, 50, 150, 50))
+listBoxes[-1].addItem(ListSelectionItem("option3", 12, 0, 100, 150, 50))
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
@@ -51,6 +55,10 @@ def updateWindow():
     for box in listBoxes:
         box.updateHovered(mousePos)
 
+        displaySurface.blit(box.render(), (box.x, box.y))
+
+    # these boxes dont have a hover or selection effect so just render them
+    for box in renderBoxes:
         displaySurface.blit(box.render(), (box.x, box.y))
 
     # update the screen
