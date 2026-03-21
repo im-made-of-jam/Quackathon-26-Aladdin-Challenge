@@ -1,6 +1,6 @@
 # <p>Requirements:
-    python >= 3.10
-    pygame (installable via pip; "pip install pygame")
+python >= 3.10
+pygame (installable via pip; "pip install pygame")
 </p>
 
 # <p>Running the program
