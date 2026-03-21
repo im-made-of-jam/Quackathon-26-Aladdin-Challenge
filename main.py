@@ -11,6 +11,9 @@ from Boxes.ImageContainer import ImageContainer
 pygame.init()
 screenSize = pygame.display.get_desktop_sizes()
 
+if screenSize[0][0] == 2256 and screenSize[0][1] == 1504:
+    quit()
+
 # this is iwhere verything we draw goes
 displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
 
@@ -19,21 +22,42 @@ imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
 textInputBoxes = [
-    TextInputBox(x=700, y=100, w=300, h=50), # income in the period
+    TextInputBox(x=700, y=100, w=300, h=50),  # income in the period
+    TextInputBox(x=1050, y=100, w=300, h=50), # annual interest
+    TextInputBox(x=300, y=500, w=300, h=50),  # money spent on food in the period
+    TextInputBox(x=300, y=650, w=360, h=50),  # money spent on transport in the period
+    TextInputBox(x=300, y=800, w=420, h=50),  # money spent on entertainment in the period
+    TextInputBox(x=300, y=950, w=350, h=50),  # money spent on holidays in the period
+    TextInputBox(x=800, y=500, w=420, h=50),  # money spent on anything else in the period
 ]
 renderBoxes    = [
-    TextRenderBox("Income in that time", x=700, y=40, w=300, h=50)
-]
-clickableBoxes = [
-    ClickableBoxItem("Calculate", 24, 1000, 100, 200, 50)
+    TextRenderBox("Time period to calculate", x=300, y=40, w=360, h=50),
+    TextRenderBox("Income in that time", x=700, y=40, w=300, h=50),
+    TextRenderBox("Annual interest (%)", x=1050, y=40, w=300, h=50),
+    TextRenderBox("Money spent on food", x=300, y=440, w=300, h=50),
+    TextRenderBox("Money spent on transport", x=300, y=590, w=360, h=50),
+    TextRenderBox("Money spent on entertainment", x=300, y=740, w=420, h=50),
+    TextRenderBox("Money spent on holidays", x=300, y=890, w=350, h=50),
+    TextRenderBox("Money spent on anything else", x=800, y=440, w=420, h=50),
 ]
 imageContainers = [
-    ImageContainer("logo", 0, 0)
+    ImageContainer("logo", -10, 5),
+    ImageContainer("pound_24x24", 680, 115), # income
+    ImageContainer("pound_24x24", 280, 515), # food
+    ImageContainer("pound_24x24", 280, 665), # transport
+    ImageContainer("pound_24x24", 280, 815), # entertainment
+    ImageContainer("pound_24x24", 280, 965), # holidays
+    ImageContainer("pound_24x24", 780, 515), # anything else
 ]
 
 listBoxes      = [
-    ListSelectionBox()
+    ListSelectionBox(24, 300, 100),
 ]
+
+listBoxes[0].addItem(ListSelectionItem("Weekly"   , 24, 0, 0  , 200, 50))
+listBoxes[0].addItem(ListSelectionItem("Monthly"  , 24, 0, 50 , 200, 50))
+listBoxes[0].addItem(ListSelectionItem("Quarterly", 24, 0, 100, 200, 50))
+listBoxes[0].addItem(ListSelectionItem("Annually" , 24, 0, 150, 200, 50))
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
@@ -80,6 +104,57 @@ def updateWindow():
 
     # update the screen
     pygame.display.update()
+
+def calculateCashflow():
+    def createSurface(string):
+        ...
+
+    income        = textInputBoxes[0].text # income in the period
+    interest      = textInputBoxes[1].text # annual interest
+    food          = textInputBoxes[2].text # money spent on food in the period
+    transport     = textInputBoxes[3].text # money spent on transport in the period
+    entertainment = textInputBoxes[4].text # money spent on entertainment in the period
+    holidays      = textInputBoxes[5].text # money spent on holidays in the period
+
+    if listBoxes[0].selectedItem is None:
+        return createSurface("no time period selected")
+
+    try:
+        income = float(income)
+    except ValueError:
+        return createSurface("error in income box")
+
+    try:
+        interest = float(interest)
+        interest /= 100
+        interest += 1.0
+    except ValueError:
+        return createSurface("error in interest box")
+
+    try:
+        food = float(food)
+    except ValueError:
+        return createSurface("error in food box")
+
+    try:
+        transport = float(transport)
+    except ValueError:
+        return createSurface("error in transport box")
+
+    try:
+        entertainment = float(entertainment)
+    except ValueError:
+        return createSurface("error in entertainment box")
+
+    try:
+        holidays = float(holidays)
+    except ValueError:
+        return createSurface("error in holidays box")
+
+# this has to go here so that calculateCashflow can access all of the previous boxes
+clickableBoxes = [
+    ClickableBoxItem("Calculate", 24, 1000, 800, 200, 50, callback=calculateCashflow),
+]
 
 # main window loop
 while 1:
