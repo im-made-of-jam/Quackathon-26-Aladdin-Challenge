@@ -1,6 +1,7 @@
 import pygame
 
 textInputBoxSelectedBackground   = (255, 255, 255)
+textInputBoxHoveredBackground    = (191, 191, 191)
 textInputBoxDeSelectedBackground = (127, 127, 127)
 
 class TextInputBox:
@@ -11,11 +12,13 @@ class TextInputBox:
         self.fontSize = fontSize
         self.fontName = fontName
 
+        # positoin and size of the box
         self.x = x
         self.y = y
         self.w = w
         self.h = h
 
+        # information about selection
         self.isHovered = False
         self.isSelected = False
 
@@ -52,6 +55,9 @@ class TextInputBox:
         renderSurface = pygame.surface.Surface((self.w, self.h))
         if self.isSelected:
             renderSurface.fill(textInputBoxSelectedBackground)
+
+        elif self.isHovered:
+            renderSurface.fill(textInputBoxHoveredBackground)
 
         else:
             renderSurface.fill(textInputBoxDeSelectedBackground)
