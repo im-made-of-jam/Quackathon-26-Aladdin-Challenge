@@ -2,6 +2,7 @@ import pygame # rendering library
 
 from InitImages import initImages
 from TextInputBox import TextInputBox
+from ListSelection import ListSelectionBox, ListSelectionItem
 
 # set up pygame for rendering
 pygame.init()
@@ -14,7 +15,10 @@ displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
 imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
-textInputBoxes = []
+textInputBoxes = [TextInputBox(24, 100, 1000, 100, 100)]
+listBoxes = [ListSelectionBox(24, 600, 100)]
+
+listBoxes[-1].addItem(ListSelectionItem("option1", 12, 0, 0, 150, 50))
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
@@ -40,6 +44,11 @@ def updateWindow():
 
     # make evry box update whether or not its hovered, then re-draw itself
     for box in textInputBoxes:
+        box.updateHovered(mousePos)
+
+        displaySurface.blit(box.render(), (box.x, box.y))
+
+    for box in listBoxes:
         box.updateHovered(mousePos)
 
         displaySurface.blit(box.render(), (box.x, box.y))
@@ -93,6 +102,9 @@ while 1:
 
                 # make all boxes check to see if they are selected or not
                 for box in textInputBoxes:
+                    box.updateSelected()
+
+                for box in listBoxes:
                     box.updateSelected()
 
             case _:
