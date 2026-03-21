@@ -1,3 +1,5 @@
+import math
+
 import pygame # rendering library
 
 from Images.InitImages import initImages
@@ -22,32 +24,35 @@ imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
 textInputBoxes = [
-    TextInputBox(x=700, y=100, w=300, h=50),  # income in the period
+    TextInputBox(x=700,  y=100, w=300, h=50),  # income in the period
     TextInputBox(x=1050, y=100, w=300, h=50), # annual interest
-    TextInputBox(x=300, y=500, w=300, h=50),  # money spent on food in the period
-    TextInputBox(x=300, y=650, w=360, h=50),  # money spent on transport in the period
-    TextInputBox(x=300, y=800, w=420, h=50),  # money spent on entertainment in the period
-    TextInputBox(x=300, y=950, w=350, h=50),  # money spent on holidays in the period
-    TextInputBox(x=800, y=500, w=420, h=50),  # money spent on anything else in the period
+    TextInputBox(x=300,  y=500, w=300, h=50),  # money spent on food in the period
+    TextInputBox(x=300,  y=650, w=360, h=50),  # money spent on transport in the period
+    TextInputBox(x=300,  y=800, w=420, h=50),  # money spent on entertainment in the period
+    TextInputBox(x=300,  y=950, w=350, h=50),  # money spent on holidays in the period
+    TextInputBox(x=800,  y=500, w=420, h=50),  # money spent on anything else in the period
 ]
 renderBoxes    = [
-    TextRenderBox("Time period to calculate", x=300, y=40, w=360, h=50),
-    TextRenderBox("Income in that time", x=700, y=40, w=300, h=50),
-    TextRenderBox("Annual interest (%)", x=1050, y=40, w=300, h=50),
-    TextRenderBox("Money spent on food", x=300, y=440, w=300, h=50),
-    TextRenderBox("Money spent on transport", x=300, y=590, w=360, h=50),
-    TextRenderBox("Money spent on entertainment", x=300, y=740, w=420, h=50),
-    TextRenderBox("Money spent on holidays", x=300, y=890, w=350, h=50),
-    TextRenderBox("Money spent on anything else", x=800, y=440, w=420, h=50),
+    TextRenderBox("Time period to calculate",     x=300,  y=40,  w=360, h=50),
+    TextRenderBox("Income in that time",          x=700,  y=40,  w=300, h=50),
+    TextRenderBox("Annual interest (%)",          x=1050, y=40,  w=300, h=50),
+    TextRenderBox("Money spent on food",          x=300,  y=440, w=300, h=50),
+    TextRenderBox("Money spent on transport",     x=300,  y=590, w=360, h=50),
+    TextRenderBox("Money spent on entertainment", x=300,  y=740, w=420, h=50),
+    TextRenderBox("Money spent on holidays",      x=300,  y=890, w=350, h=50),
+    TextRenderBox("Money spent on anything else", x=800,  y=440, w=420, h=50),
 ]
 imageContainers = [
     ImageContainer("logo", -10, 5),
-    ImageContainer("pound_24x24", 680, 115), # income
-    ImageContainer("pound_24x24", 280, 515), # food
-    ImageContainer("pound_24x24", 280, 665), # transport
-    ImageContainer("pound_24x24", 280, 815), # entertainment
-    ImageContainer("pound_24x24", 280, 965), # holidays
-    ImageContainer("pound_24x24", 780, 515), # anything else
+    ImageContainer("pound_24x24",      680, 115),  # income
+    ImageContainer("pound_24x24",      280, 515),  # food
+    ImageContainer("pound_24x24",      280, 665),  # transport
+    ImageContainer("pound_24x24",      280, 815),  # entertainment
+    ImageContainer("pound_24x24",      280, 965),  # holidays
+    ImageContainer("pound_24x24",      780, 515),  # anything else
+    ImageContainer("calculateResults", 1000, 850), # total income display box
+    ImageContainer("calculateResults2", 1000, 910), # total outgoing display box
+    ImageContainer("calculateResults3", 1000, 910), # total display box
 ]
 
 listBoxes      = [
@@ -74,6 +79,9 @@ def updateWindow():
 
     # add any pictures we need draw
     for image in imageContainers:
+        if type(image) == pygame.surface.Surface:
+            print(image)
+
         displaySurface.blit(imageDict[image.imageName], (image.x, image.y))
 
     # add the exit button
@@ -107,7 +115,13 @@ def updateWindow():
 
 def calculateCashflow():
     def createSurface(string):
-        ...
+        renderSurface = pygame.surface.Surface((600, 50))
+        renderSurface.fill((255, 255, 255))
+
+        # render the text kept within the box and draw it to the surface we will return
+        renderSurface.blit(pygame.font.SysFont("mono", 24).render(string, True, (0, 0, 0)), (13, 13))
+
+        return renderSurface
 
     income        = textInputBoxes[0].text # income in the period
     interest      = textInputBoxes[1].text # annual interest
@@ -115,41 +129,88 @@ def calculateCashflow():
     transport     = textInputBoxes[3].text # money spent on transport in the period
     entertainment = textInputBoxes[4].text # money spent on entertainment in the period
     holidays      = textInputBoxes[5].text # money spent on holidays in the period
+    misc          = textInputBoxes[6].text # money spent on anything else in the period
 
     if listBoxes[0].selectedItem is None:
-        return createSurface("no time period selected")
+        imageDict["calculateResults"] = createSurface("no time period selected")
+        return
 
     try:
         income = float(income)
     except ValueError:
-        return createSurface("error in income box")
+        imageDict["calculateResults"] = createSurface("error in income box")
+        return
 
     try:
         interest = float(interest)
         interest /= 100
         interest += 1.0
     except ValueError:
-        return createSurface("error in interest box")
+        imageDict["calculateResults"] = createSurface("error in interest box")
+        return
 
     try:
         food = float(food)
     except ValueError:
-        return createSurface("error in food box")
+        imageDict["calculateResults"] = createSurface("error in food box")
+        return
 
     try:
         transport = float(transport)
     except ValueError:
-        return createSurface("error in transport box")
+        imageDict["calculateResults"] = createSurface("error in transport box")
+        return
 
     try:
         entertainment = float(entertainment)
     except ValueError:
-        return createSurface("error in entertainment box")
+        imageDict["calculateResults"] = createSurface("error in entertainment box")
+        return
 
     try:
         holidays = float(holidays)
     except ValueError:
-        return createSurface("error in holidays box")
+        imageDict["calculateResults"] = createSurface("error in holidays box")
+        return
+
+    try:
+        misc = float(misc)
+    except ValueError:
+        imageDict["calculateResults"] = createSurface("error in anything else box")
+        return
+
+    # 365 days divided by this amount
+    interestDivisor = 1 # one time per year by default
+
+    match listBoxes[0].selectedItem.text:
+        case "Weekly":
+            interestDivisor = (365 / 7) # 52 and a bit times per year
+
+        case "Monthly":
+            interestDivisor = 12 # 12 times per year
+
+        case "Quarterly":
+            interestDivisor = 4 # 4 times per year
+
+        case _:
+            interestDivisor = 1 # ideally anually
+
+    # the percent of interest for the period specified
+    interestPerPeriod = interest ** (1 / interestDivisor)
+
+    # a bunch of python black magic to turn it into a string with a decimal point
+    totalIncomeSurface = pygame.surface.Surface((600, 50))
+    totalIncomeSurface.fill((191, 191, 191))
+    totalIncomePence = str(int(income * 100))
+    totalIncomePence = totalIncomePence[:-2] + "." + totalIncomePence[-2:]
+
+    # render the total income onto a surface that will be displayed
+    totalIncomeSurface.blit(pygame.font.SysFont("mono", 24).render(("Total income for the period: " + totalIncomePence), True, (0, 0, 0)), (13, 13))
+
+    # replace the image in the dict with the surface we have just rendered
+    imageDict["calculateResults"] = totalIncomeSurface
+
+    totalSpending = food + transport + entertainment + holidays + misc
 
 # this has to go here so that calculateCashflow can access all of the previous boxes
 clickableBoxes = [
