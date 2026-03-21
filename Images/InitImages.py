@@ -11,6 +11,12 @@ def initImages() -> dict:
     returnDict = {}
 
     for filename in os.listdir("./Images"):
+        if filename == __name__.split('.')[-1] + ".py":
+            continue
+
+        if filename == "__pycache__":
+            continue
+
         returnDict[filename.split('.')[0]] = pygame.image.load("Images/"+filename)
 
     return returnDict
