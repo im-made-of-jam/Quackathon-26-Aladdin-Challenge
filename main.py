@@ -14,10 +14,13 @@ displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
 imageDict = initImages()
 
 # all of the text boxes that will need to be drawn
-textInputBoxes = [TextInputBox(24, 10, 100, 100, 100)]
+textInputBoxes = []
 
 # keep a track of the position of the mouse for highlighting various buttons
 mousePos = [0, 0]
+
+# keep a track of exit button globally so it still works when other things break
+exitHovered = False
 
 def updateWindow():
     """
@@ -30,8 +33,12 @@ def updateWindow():
     displaySurface.blit(imageDict["logo"], (0, 0))
 
     # add the exit button
-    displaySurface.blit(imageDict["exit"], ((screenSize[0][0] - imageDict["exit"].get_width()), 0))
+    if exitHovered:
+        displaySurface.blit(imageDict["exit_light"], ((screenSize[0][0] - imageDict["exit_light"].get_width()), 0))
+    else:
+        displaySurface.blit(imageDict["exit"], ((screenSize[0][0] - imageDict["exit"].get_width()), 0))
 
+    # make evry box update whether or not its hovered, then re-draw itself
     for box in textInputBoxes:
         box.updateHovered(mousePos)
 
@@ -42,8 +49,12 @@ def updateWindow():
 
 # main window loop
 while 1:
+    # keep a track of whether or not we actually had any events so we dont have to redraw the window if we dont need to
+    haveHadEvent = False
+
     # process events as needed
     for event in pygame.event.get():
+        haveHadEvent = True
         match event.type:
             case pygame.QUIT:
                 quit()
@@ -69,9 +80,15 @@ while 1:
             case pygame.MOUSEMOTION:
                 mousePos = [event.pos[0], event.pos[1]]
 
+                # update the look of the exit button
+                if (event.pos[0] > (screenSize[0][0] - imageDict["exit"].get_width())) and (event.pos[1] < imageDict["exit"].get_height()):
+                    exitHovered = True
+                else:
+                    exitHovered = False
+
             case pygame.MOUSEBUTTONDOWN:
                 # quickly check for exit before doing any further processing
-                if (event.pos[0] > (screenSize[0][0] - imageDict["exit"].get_width())) and (event.pos[1] < imageDict["exit"].get_height()):
+                if exitHovered:
                     quit()
 
                 # make all boxes check to see if they are selected or not
@@ -81,4 +98,5 @@ while 1:
             case _:
                 pass
 
-    updateWindow()
+    if haveHadEvent:
+        updateWindow()
