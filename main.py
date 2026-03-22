@@ -134,12 +134,16 @@ def calculateCashflow():
 
     if listBoxes[0].selectedItem is None:
         imageDict["calculateResults"] = createSurface("no time period selected")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         income = float(income)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in income box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
@@ -148,36 +152,48 @@ def calculateCashflow():
         interest += 1.0
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in interest box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         food = float(food)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in food box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         transport = float(transport)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in transport box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         entertainment = float(entertainment)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in entertainment box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         holidays = float(holidays)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in holidays box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     try:
         misc = float(misc)
     except ValueError:
         imageDict["calculateResults"] = createSurface("error in anything else box")
+        imageDict["calculateResults2"] = pygame.surface.Surface((1, 1))
+        imageDict["calculateResults3"] = pygame.surface.Surface((1, 1))
         return
 
     # 365 days divided by this amount
@@ -197,7 +213,10 @@ def calculateCashflow():
             interestDivisor = 1 # ideally anually
 
     # the percent of interest for the period specified
-    interestPerPeriod = interest ** (1 / interestDivisor)
+    try:
+        interestPerPeriod = interest ** (1 / interestDivisor)
+    except ZeroDivisionError:
+        interestPerPeriod = 0
 
     # a bunch of python black magic to turn it into a string with a decimal point
     totalIncomeSurface = pygame.surface.Surface((600, 50))
@@ -241,7 +260,7 @@ while 1:
                     for box in textInputBoxes:
                         box.addIfSelected(event.text)
 
-                if ' ' == event.text:
+                if '.' == event.text:
                     for box in textInputBoxes:
                         box.addIfSelected(event.text)
 
