@@ -52,6 +52,7 @@ imageContainers = [
     ImageContainer("calculateResults2",    1000, 710), # total outgoing display box
     ImageContainer("calculateResults3",    1000, 770), # total cashflow display box
     ImageContainer("calculateResults4",    1000, 830), # total interest display box
+    ImageContainer("obsidian_horse",       1366, 150), # the obsidian horse icon
 ]
 
 listBoxes      = [
@@ -226,8 +227,10 @@ def calculateCashflow():
     totalIncomePence = totalIncomePence[:-2] + "." + totalIncomePence[-2:]
 
     # make sure there is always a leading zero
-    if totalIncomePence[0] == ".":
-        totalIncomePence = "0" + totalIncomePence
+    # splitting on the negative sign may result in an empty string as the first element of
+    #   the returned list, so use the last element which *should* be the number we want
+    if totalIncomePence.split('-')[-1][0] == ".":
+        totalIncomePence = "0" if len(totalIncomePence.split('-')) == 1 else "-0" + totalIncomePence
 
     # render the total income onto a surface that will be displayed
     totalIncomeSurface.blit(pygame.font.SysFont("mono", 24).render(("Total income for the period:  " + totalIncomePence), True, (0, 0, 0)), (13, 13))
@@ -245,8 +248,8 @@ def calculateCashflow():
     totalSpendingPence = str(int(totalSpending * 100))
     totalSpendingPence = totalSpendingPence[:-2] + "." + totalSpendingPence[-2:]
 
-    if totalSpendingPence[0] == '.':
-        totalSpendingPence = "0" + totalSpendingPence
+    if totalSpendingPence.split('-')[-1][0] == '.':
+        totalSpendingPence = "0" if len(totalSpendingPence.split('-')) == 1 else "-0" + totalSpendingPence
 
     totalSpendingSurface.blit(pygame.font.SysFont("mono", 24).render(("Total spending for the period:  " + totalSpendingPence), True, (0, 0, 0)), (13, 13))
     totalSpendingSurface.blit(imageDict["currencySymbol_24x24"], (442, 12))
@@ -260,8 +263,8 @@ def calculateCashflow():
     totalCashflowPence = str(int(totalCashflow * 100))
     totalCashflowPence = totalCashflowPence[:-2] + "." + totalCashflowPence[-2:]
 
-    if totalCashflowPence[0] == ".":
-        totalCashflowPence = "0" + totalCashflowPence
+    if totalCashflowPence.split('-')[-1][0] == ".":
+        totalCashflowPence = "0" if len(totalCashflowPence.split('-')) else "-0" + totalCashflowPence
 
     totalCashflowSurface.blit(pygame.font.SysFont("mono", 24).render(("Total cashflow for the period:  " + totalCashflowPence), True, (0, 0, 0)), (13, 13))
     totalCashflowSurface.blit(imageDict["currencySymbol_24x24"], (442, 12))
@@ -275,8 +278,8 @@ def calculateCashflow():
     totalInterestEarnedPence = str(int(totalInterestEarned * 100))
     totalInterestEarnedPence = totalInterestEarnedPence[:-2] + "." + totalInterestEarnedPence[-2:]
 
-    if totalInterestEarnedPence[0] == ".":
-        totalInterestEarnedPence = "0" + totalInterestEarnedPence
+    if totalInterestEarnedPence.split('-')[-1][0] == ".":
+        totalInterestEarnedPence = "0" if len(totalInterestEarnedPence.split('-')) == 1 else "-0" + totalInterestEarnedPence
 
     if totalInterestEarned < 0:
         totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest lost with this deficit:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
