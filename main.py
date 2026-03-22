@@ -42,12 +42,12 @@ renderBoxes    = [
 ]
 imageContainers = [
     ImageContainer("logo", -10, 5),
-    ImageContainer("pound_24x24",       680, 115),  # income
-    ImageContainer("pound_24x24",       280, 515),  # food
-    ImageContainer("pound_24x24",       280, 665),  # transport
-    ImageContainer("pound_24x24",       280, 815),  # entertainment
-    ImageContainer("pound_24x24",       280, 965),  # holidays
-    ImageContainer("pound_24x24",       780, 515),  # anything else
+    ImageContainer("currencySymbol_24x24",       680, 115),  # income
+    ImageContainer("currencySymbol_24x24",       280, 515),  # food
+    ImageContainer("currencySymbol_24x24",       280, 665),  # transport
+    ImageContainer("currencySymbol_24x24",       280, 815),  # entertainment
+    ImageContainer("currencySymbol_24x24",       280, 965),  # holidays
+    ImageContainer("currencySymbol_24x24",       780, 515),  # anything else
     ImageContainer("calculateResults",  1000, 650), # total income display box
     ImageContainer("calculateResults2", 1000, 710), # total outgoing display box
     ImageContainer("calculateResults3", 1000, 770), # total cashflow display box
@@ -231,7 +231,7 @@ def calculateCashflow():
 
     # render the total income onto a surface that will be displayed
     totalIncomeSurface.blit(pygame.font.SysFont("mono", 24).render(("Total income for the period:  " + totalIncomePence), True, (0, 0, 0)), (13, 13))
-    totalIncomeSurface.blit(imageDict["pound_24x24"], (412, 12))
+    totalIncomeSurface.blit(imageDict["currencySymbol_24x24"], (412, 12))
 
     # replace the image in the dict with the surface we have just rendered
     imageDict["calculateResults"] = totalIncomeSurface
@@ -249,7 +249,7 @@ def calculateCashflow():
         totalSpendingPence = "0" + totalSpendingPence
 
     totalSpendingSurface.blit(pygame.font.SysFont("mono", 24).render(("Total spending for the period:  " + totalSpendingPence), True, (0, 0, 0)), (13, 13))
-    totalSpendingSurface.blit(imageDict["pound_24x24"], (442, 12))
+    totalSpendingSurface.blit(imageDict["currencySymbol_24x24"], (442, 12))
 
     imageDict["calculateResults2"] = totalSpendingSurface
 
@@ -264,7 +264,7 @@ def calculateCashflow():
         totalCashflowPence = "0" + totalCashflowPence
 
     totalCashflowSurface.blit(pygame.font.SysFont("mono", 24).render(("Total cashflow for the period:  " + totalCashflowPence), True, (0, 0, 0)), (13, 13))
-    totalCashflowSurface.blit(imageDict["pound_24x24"], (442, 12))
+    totalCashflowSurface.blit(imageDict["currencySymbol_24x24"], (442, 12))
 
     imageDict["calculateResults3"] = totalCashflowSurface
 
@@ -283,7 +283,7 @@ def calculateCashflow():
     else:
         totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest earned with this money:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
 
-    totalInterestEarnedSurface.blit(imageDict["pound_24x24"], (550, 12))
+    totalInterestEarnedSurface.blit(imageDict["currencySymbol_24x24"], (550, 12))
 
     imageDict["calculateResults4"] = totalInterestEarnedSurface
 
