@@ -23,7 +23,7 @@ imageDict = initImages()
 # all of the text boxes that will need to be drawn
 textInputBoxes = [
     TextInputBox(x=700,  y=100, w=300, h=50),  # income in the period
-    TextInputBox(x=1050, y=100, w=300, h=50), # annual interest
+    TextInputBox(x=1050, y=100, w=300, h=50),  # annual interest
     TextInputBox(x=300,  y=500, w=300, h=50),  # money spent on food in the period
     TextInputBox(x=300,  y=650, w=360, h=50),  # money spent on transport in the period
     TextInputBox(x=300,  y=800, w=420, h=50),  # money spent on entertainment in the period
@@ -42,15 +42,15 @@ renderBoxes    = [
 ]
 imageContainers = [
     ImageContainer("logo", -10, 5),
-    ImageContainer("pound_24x24",      680, 115),  # income
-    ImageContainer("pound_24x24",      280, 515),  # food
-    ImageContainer("pound_24x24",      280, 665),  # transport
-    ImageContainer("pound_24x24",      280, 815),  # entertainment
-    ImageContainer("pound_24x24",      280, 965),  # holidays
-    ImageContainer("pound_24x24",      780, 515),  # anything else
-    ImageContainer("calculateResults", 1000, 850), # total income display box
+    ImageContainer("pound_24x24",       680, 115),  # income
+    ImageContainer("pound_24x24",       280, 515),  # food
+    ImageContainer("pound_24x24",       280, 665),  # transport
+    ImageContainer("pound_24x24",       280, 815),  # entertainment
+    ImageContainer("pound_24x24",       280, 965),  # holidays
+    ImageContainer("pound_24x24",       780, 515),  # anything else
+    ImageContainer("calculateResults",  1000, 850), # total income display box
     ImageContainer("calculateResults2", 1000, 910), # total outgoing display box
-    ImageContainer("calculateResults3", 1000, 910), # total display box
+    ImageContainer("calculateResults3", 1000, 970), # total display box
 ]
 
 listBoxes      = [
@@ -224,13 +224,48 @@ def calculateCashflow():
     totalIncomePence = str(int(income * 100))
     totalIncomePence = totalIncomePence[:-2] + "." + totalIncomePence[-2:]
 
+    # make sure there is always a leading zero
+    if totalIncomePence[0] == ".":
+        totalIncomePence = "0" + totalIncomePence
+
     # render the total income onto a surface that will be displayed
-    totalIncomeSurface.blit(pygame.font.SysFont("mono", 24).render(("Total income for the period: " + totalIncomePence), True, (0, 0, 0)), (13, 13))
+    totalIncomeSurface.blit(pygame.font.SysFont("mono", 24).render(("Total income for the period:  " + totalIncomePence), True, (0, 0, 0)), (13, 13))
+    totalIncomeSurface.blit(imageDict["pound_24x24"], (412, 12))
 
     # replace the image in the dict with the surface we have just rendered
     imageDict["calculateResults"] = totalIncomeSurface
 
+    # now do the same again but for total spending instead of total income
     totalSpending = food + transport + entertainment + holidays + misc
+
+    totalSpendingSurface = pygame.surface.Surface((600, 50))
+
+    totalSpendingSurface.fill((191, 191, 191))
+    totalSpendingPence = str(int(totalSpending * 100))
+    totalSpendingPence = totalSpendingPence[:-2] + "." + totalSpendingPence[-2:]
+
+    if totalSpendingPence[0] == '.':
+        totalSpendingPence = "0" + totalSpendingPence
+
+    totalSpendingSurface.blit(pygame.font.SysFont("mono", 24).render(("Total spending for the period:  " + totalSpendingPence), True, (0, 0, 0)), (13, 13))
+    totalSpendingSurface.blit(imageDict["pound_24x24"], (442, 12))
+
+    imageDict["calculateResults2"] = totalSpendingSurface
+
+    # now the same again but for total cashflow
+    totalCashflowSurface = pygame.surface.Surface((600, 50))
+    totalCashflowSurface.fill((191, 191, 191))
+    totalCashflow = income - totalSpending
+    totalCashflowPence = str(int(totalCashflow * 100))
+    totalCashflowPence = totalCashflowPence[:-2] + "." + totalCashflowPence[-2:]
+
+    if totalCashflowPence[0] == ".":
+        totalCashflowPence = "0" + totalCashflowPence
+
+    totalCashflowSurface.blit(pygame.font.SysFont("mono", 24).render(("Total cashflow for the period:  " + totalCashflowPence), True, (0, 0, 0)), (13, 13))
+    totalCashflowSurface.blit(imageDict["pound_24x24"], (442, 12))
+
+    imageDict["calculateResults3"] = totalCashflowSurface
 
 # this has to go here so that calculateCashflow can access all of the previous boxes
 clickableBoxes = [
@@ -294,6 +329,9 @@ while 1:
 
                 for box in clickableBoxes:
                     box.updateSelected()
+
+            case pygame.VIDEOEXPOSE:
+                updateWindow()
 
             case _:
                 pass
