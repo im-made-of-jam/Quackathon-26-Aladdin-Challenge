@@ -48,9 +48,10 @@ imageContainers = [
     ImageContainer("pound_24x24",       280, 815),  # entertainment
     ImageContainer("pound_24x24",       280, 965),  # holidays
     ImageContainer("pound_24x24",       780, 515),  # anything else
-    ImageContainer("calculateResults",  1000, 850), # total income display box
-    ImageContainer("calculateResults2", 1000, 910), # total outgoing display box
-    ImageContainer("calculateResults3", 1000, 970), # total display box
+    ImageContainer("calculateResults",  1000, 650), # total income display box
+    ImageContainer("calculateResults2", 1000, 710), # total outgoing display box
+    ImageContainer("calculateResults3", 1000, 770), # total cashflow display box
+    ImageContainer("calculateResults4", 1000, 830), # total interest display box
 ]
 
 listBoxes      = [
@@ -219,7 +220,7 @@ def calculateCashflow():
         interestPerPeriod = 0
 
     # a bunch of python black magic to turn it into a string with a decimal point
-    totalIncomeSurface = pygame.surface.Surface((600, 50))
+    totalIncomeSurface = pygame.surface.Surface((700, 50))
     totalIncomeSurface.fill((191, 191, 191))
     totalIncomePence = str(int(income * 100))
     totalIncomePence = totalIncomePence[:-2] + "." + totalIncomePence[-2:]
@@ -238,7 +239,7 @@ def calculateCashflow():
     # now do the same again but for total spending instead of total income
     totalSpending = food + transport + entertainment + holidays + misc
 
-    totalSpendingSurface = pygame.surface.Surface((600, 50))
+    totalSpendingSurface = pygame.surface.Surface((700, 50))
 
     totalSpendingSurface.fill((191, 191, 191))
     totalSpendingPence = str(int(totalSpending * 100))
@@ -253,7 +254,7 @@ def calculateCashflow():
     imageDict["calculateResults2"] = totalSpendingSurface
 
     # now the same again but for total cashflow
-    totalCashflowSurface = pygame.surface.Surface((600, 50))
+    totalCashflowSurface = pygame.surface.Surface((700, 50))
     totalCashflowSurface.fill((191, 191, 191))
     totalCashflow = income - totalSpending
     totalCashflowPence = str(int(totalCashflow * 100))
@@ -267,9 +268,26 @@ def calculateCashflow():
 
     imageDict["calculateResults3"] = totalCashflowSurface
 
+    # calculate and display interest on the total cashflow
+    totalInterestEarned = (interestPerPeriod * totalCashflow) - totalCashflow
+    totalInterestEarnedSurface = pygame.surface.Surface((700, 50))
+    totalInterestEarnedSurface.fill((191, 191, 191))
+    totalInterestEarnedPence = str(int(totalInterestEarned * 100))
+    totalInterestEarnedPence = totalInterestEarnedPence[:-2] + "." + totalInterestEarnedPence[-2:]
+
+    if totalInterestEarnedPence[0] == ".":
+        totalInterestEarnedPence = "0" + totalInterestEarnedPence
+
+    if totalInterestEarned < 0:
+        totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest earned with this money:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
+    else:
+        totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest earned with this money:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
+
+    imageDict["calculateResults4"] = totalInterestEarnedSurface
+
 # this has to go here so that calculateCashflow can access all of the previous boxes
 clickableBoxes = [
-    ClickableBoxItem("Calculate", 24, 1000, 800, 200, 50, callback=calculateCashflow),
+    ClickableBoxItem("Calculate", 24, 1000, 580, 200, 50, callback=calculateCashflow),
 ]
 
 # main window loop
