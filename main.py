@@ -279,9 +279,11 @@ def calculateCashflow():
         totalInterestEarnedPence = "0" + totalInterestEarnedPence
 
     if totalInterestEarned < 0:
-        totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest earned with this money:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
+        totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest lost with this deficit:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
     else:
         totalInterestEarnedSurface.blit(pygame.font.SysFont("mono", 24).render(("Total interest earned with this money:  " + totalInterestEarnedPence), True, (0, 0, 0)), (13, 13))
+
+    totalInterestEarnedSurface.blit(imageDict["pound_24x24"], (550, 12))
 
     imageDict["calculateResults4"] = totalInterestEarnedSurface
 
