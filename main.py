@@ -42,16 +42,16 @@ renderBoxes    = [
 ]
 imageContainers = [
     ImageContainer("logo", -10, 5),
-    ImageContainer("currencySymbol_24x24",       680, 115),  # income
-    ImageContainer("currencySymbol_24x24",       280, 515),  # food
-    ImageContainer("currencySymbol_24x24",       280, 665),  # transport
-    ImageContainer("currencySymbol_24x24",       280, 815),  # entertainment
-    ImageContainer("currencySymbol_24x24",       280, 965),  # holidays
-    ImageContainer("currencySymbol_24x24",       780, 515),  # anything else
-    ImageContainer("calculateResults",  1000, 650), # total income display box
-    ImageContainer("calculateResults2", 1000, 710), # total outgoing display box
-    ImageContainer("calculateResults3", 1000, 770), # total cashflow display box
-    ImageContainer("calculateResults4", 1000, 830), # total interest display box
+    ImageContainer("currencySymbol_24x24", 680,  115), # income
+    ImageContainer("currencySymbol_24x24", 280,  515), # food
+    ImageContainer("currencySymbol_24x24", 280,  665), # transport
+    ImageContainer("currencySymbol_24x24", 280,  815), # entertainment
+    ImageContainer("currencySymbol_24x24", 280,  965), # holidays
+    ImageContainer("currencySymbol_24x24", 780,  515), # anything else
+    ImageContainer("calculateResults",     1000, 650), # total income display box
+    ImageContainer("calculateResults2",    1000, 710), # total outgoing display box
+    ImageContainer("calculateResults3",    1000, 770), # total cashflow display box
+    ImageContainer("calculateResults4",    1000, 830), # total interest display box
 ]
 
 listBoxes      = [
