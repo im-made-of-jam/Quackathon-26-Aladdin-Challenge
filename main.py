@@ -1,8 +1,9 @@
-import math
-
 import pygame # rendering library
 
+# to load images from disk
 from Images.InitImages import initImages
+
+# all the boxes for input
 from Boxes.TextInputBox import TextInputBox
 from Boxes.ListSelection import ListSelectionBox, ListSelectionItem
 from Boxes.TextRenderBox import TextRenderBox
@@ -12,9 +13,6 @@ from Boxes.ImageContainer import ImageContainer
 # set up pygame for rendering
 pygame.init()
 screenSize = pygame.display.get_desktop_sizes()
-
-if screenSize[0][0] == 2256 and screenSize[0][1] == 1504:
-    quit()
 
 # this is iwhere verything we draw goes
 displaySurface = pygame.display.set_mode(screenSize[0], pygame.FULLSCREEN)
@@ -114,6 +112,9 @@ def updateWindow():
     pygame.display.update()
 
 def calculateCashflow():
+    """
+    calculate cashflow numbers and update the images that will be drawn to the screen
+    """
     def createSurface(string):
         renderSurface = pygame.surface.Surface((600, 50))
         renderSurface.fill((255, 255, 255))
